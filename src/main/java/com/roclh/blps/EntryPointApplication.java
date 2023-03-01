@@ -9,10 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class EntryPointApplication {
 
     private static final Logger log = LogManager.getLogger(EntryPointApplication.class);
-
     public static void main(String[] args) {
-        log.info("Pussy tight pussy clean pussy fresh");
         SpringApplication.run(EntryPointApplication.class, args);
+        log.info("Пять минут -> полет нормальный");
     }
-
 }
