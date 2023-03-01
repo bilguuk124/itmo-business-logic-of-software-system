@@ -16,7 +16,6 @@ public class EntryPointApplication {
 
     public static void main(String[] args) {
         applicationContext = SpringApplication.run(EntryPointApplication.class, args);
-        displayAllBeans("Controller");
     }
 
     public static void displayAllBeans(String filter) {
