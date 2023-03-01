@@ -32,7 +32,7 @@ public class StudopediaController {
             return service.getArticleByName(articleName);
     }
 
-    @PostMapping("/article")
+    @GetMapping("/all-articles")
     public List<StudopediaArticle> getAllArticle(@RequestParam(name="page") int page){
         log.info("Received request to get all the articles");
         return service.getArticlesAsList(page);

@@ -2,12 +2,14 @@ package com.roclh.blps.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "article")
 @Getter
 @Setter
+@NoArgsConstructor
 public class StudopediaArticle {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "studopedia_article_gen")
@@ -31,8 +33,5 @@ public class StudopediaArticle {
         this.category = category;
     }
 
-    public StudopediaArticle() {
-
-    }
 
 }

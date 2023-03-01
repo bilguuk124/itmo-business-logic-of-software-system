@@ -19,6 +19,9 @@ import java.util.Random;
 @Service
 public class StudopediaService {
 
+    private final int FIRST_ARTICLE = 0;
+    private final int MAX_ARTICLE = 5;
+
     private final StudopediaDatabase articleRepository;
     private final CategoryDatabase categoryRepository;
 
@@ -29,12 +32,12 @@ public class StudopediaService {
     }
 
     public List<StudopediaArticle> getArticlesAsList(int page){
-        Pageable pageWithFiveElements = PageRequest.of(page, 5);
+        Pageable pageWithFiveElements = PageRequest.of(page, MAX_ARTICLE);
         return articleRepository.findByNameContainsIgnoreCase("", pageWithFiveElements);
     }
 
     public List<StudopediaArticle> getArticlesAsPage(String search, int page){
-        Pageable pageWithFiveElements = PageRequest.of(page, 5);
+        Pageable pageWithFiveElements = PageRequest.of(page, MAX_ARTICLE);
         return articleRepository.findByNameContainsIgnoreCase(search, pageWithFiveElements);
     }
 
@@ -51,12 +54,12 @@ public class StudopediaService {
     }
 
     public List<StudopediaArticle> getArticleSuggestionBySubStr(String subString){
-        Pageable pageOneWithFiveElements = PageRequest.of(0, 5);
+        Pageable pageOneWithFiveElements = PageRequest.of(FIRST_ARTICLE, MAX_ARTICLE);
         return articleRepository.findByNameContainsIgnoreCase(subString, pageOneWithFiveElements);
     }
 
     public List<StudopediaArticle> getArticleByCategory(String category, int page) throws ArticleNotFoundException {
-        Pageable pageWithFiveElements = PageRequest.of(page, 5);
+        Pageable pageWithFiveElements = PageRequest.of(page, MAX_ARTICLE);
         Optional<Category> categoryOptional = categoryRepository.findByNameLikeIgnoreCase(category);
         if (categoryOptional.isEmpty()) throw new ArticleNotFoundException();
         return articleRepository.findByCategoryEquals(categoryOptional.get(), pageWithFiveElements);
