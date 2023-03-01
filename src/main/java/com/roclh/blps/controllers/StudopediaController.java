@@ -1,9 +1,13 @@
 package com.roclh.blps.controllers;
 
+import com.roclh.blps.Exceptions.ArticleNotFoundException;
 import com.roclh.blps.entities.StudopediaArticle;
 import com.roclh.blps.service.StudopediaService;
-import com.roclh.blps.utils.HttpResponseErrorMessages;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -16,31 +20,61 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
+import java.util.List;
 
 
 @RestController
-@ApiResponses({
-        @ApiResponse(code = HttpServletResponse.SC_BAD_REQUEST, message = HttpResponseErrorMessages.BAD_REQUEST)
-})
+@RequestMapping("/api")
 public class StudopediaController {
 
     private static final Logger log = LogManager.getLogger(StudopediaController.class);
     private final StudopediaService service;
 
-    @Inject
+    @Autowired
     public StudopediaController(StudopediaService service){
         log.info("Initializing Studopedia Controller");
         this.service = service;
     }
 
-    @RequestMapping(path = "api/article/get-article", method = RequestMethod.POST)
-    @ResponseBody
-    @ApiOperation(value = "Get article by name")
-    public StudopediaArticle getArticle(@RequestBody @ApiParam("Article name") String articleName,
-                                        HttpServletResponse response){
+    @GetMapping("/article")
+    @ApiOperation(value = "Get article by name", notes = "Throws exception if Article doesn't exist")
+    public StudopediaArticle getArticle(@RequestParam(name="name") String articleName) throws ArticleNotFoundException {
         log.info("Received request to get article with name {}", articleName);
-        return service.getArticle(articleName);
+            return service.getArticleByName(articleName);
     }
 
+    @GetMapping("/all-articles")
+    public List<StudopediaArticle> getAllArticle(@RequestParam(name="page") int page){
+        log.info("Received request to get all the articles");
+        return service.getArticlesAsList(page);
+    }
+
+    @PostMapping("/article/search")
+    public List<StudopediaArticle> searchArticle(@RequestParam(name="search") String search, @RequestParam(name="page") int page) {
+        log.info("Received a search for " + search + " article request");
+        return service.getArticlesAsPage(search,page);
+    }
+
+    @PostMapping("/article/suggest")
+    public List<StudopediaArticle> suggestArticle(@RequestParam(name="search") String search){
+        log.info("Suggestions!!!");
+        return service.getArticleSuggestionBySubStr(search);
+    }
+
+    @PostMapping("/article/random")
+    public StudopediaArticle randomArticle() throws ArticleNotFoundException {
+        log.info("Received a request for random article");
+        return service.getRandomArticle();
+    }
+
+    @PostMapping("/article/category")
+    public List<StudopediaArticle> getArticlesByCategory(
+            @RequestParam(name = "category") String categoryName, @RequestParam(name = "page") int page) throws ArticleNotFoundException {
+        log.info("Received a request for articles in category: " + categoryName);
+        return service.getArticleByCategory(categoryName, page);
+    }
 }
+
+
+
+
