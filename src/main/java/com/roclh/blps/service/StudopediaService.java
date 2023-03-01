@@ -62,21 +62,22 @@ public class StudopediaService {
         return articleRepository.findByCategoryEquals(categoryOptional.get(), pageWithFiveElements);
     }
 
+    public List<StudopediaArticle> getAllArticles(){
+        return articleRepository.getAllArticles();
+    }
+
     public long getArticleCount() {
         return articleRepository.count();
     }
 
     public StudopediaArticle getRandomArticle() throws ArticleNotFoundException {
-        long max = getArticleCount();
-        long randomID;
-        if (max < 0 ) throw new ArticleNotFoundException();
-        else if (max == 0) randomID = 0;
-        else{
-            Random random = new Random();
-            randomID = random.nextLong(max);
-
+        List<StudopediaArticle> allArticles = getAllArticles();
+        Random random = new Random();
+        if(allArticles.size() == 0){
+            throw new ArticleNotFoundException();
         }
-        return getArticleByID(randomID);
+        int randomIndex = random.nextInt(allArticles.size());
+        return allArticles.get(randomIndex);
     }
 
 

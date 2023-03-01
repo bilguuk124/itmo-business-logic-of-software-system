@@ -3,20 +3,12 @@ package com.roclh.blps.controllers;
 import com.roclh.blps.Exceptions.ArticleNotFoundException;
 import com.roclh.blps.entities.StudopediaArticle;
 import com.roclh.blps.service.StudopediaService;
-import com.roclh.blps.utils.HttpResponseErrorMessages;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
 import java.util.List;
 
 
