@@ -4,7 +4,6 @@ import com.roclh.blps.database.CategoryDatabase;
 import com.roclh.blps.database.StudopediaDatabase;
 import com.roclh.blps.entities.Category;
 import com.roclh.blps.entities.StudopediaArticle;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
