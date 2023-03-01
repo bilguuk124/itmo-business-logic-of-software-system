@@ -4,8 +4,8 @@ import com.roclh.blps.Exceptions.ArticleNotFoundException;
 import com.roclh.blps.entities.StudopediaArticle;
 import com.roclh.blps.service.StudopediaService;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class StudopediaController {
 
-    private static final Logger log = LoggerFactory.getLogger(StudopediaController.class);
+    private static final Logger log = LogManager.getLogger(StudopediaController.class);
     private final StudopediaService service;
 
     @Autowired
