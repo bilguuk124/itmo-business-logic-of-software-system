@@ -1,4 +1,21 @@
 package com.roclh.blps.database;
 
-public class StudopediaDatabase {
+
+import com.roclh.blps.entities.StudopediaArticle;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface StudopediaDatabase extends JpaRepository<StudopediaArticle, Long>{
+    List<StudopediaArticle> findByNameContainsIgnoreCase(String name, Pageable pageable);
+    Optional<StudopediaArticle> findByNameEqualsIgnoreCase(String name);
+
+    Optional<StudopediaArticle> findByIdEquals(Long id);
+
 }
