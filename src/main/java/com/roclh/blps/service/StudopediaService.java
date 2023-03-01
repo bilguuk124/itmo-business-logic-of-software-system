@@ -70,7 +70,6 @@ public class StudopediaService {
         long max = getArticleCount();
         long randomID;
         if (max < 0 ) throw new ArticleNotFoundException();
-        else if (max == 0) randomID = 0;
         else{
             Random random = new Random();
             randomID = random.nextLong(max);
