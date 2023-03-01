@@ -8,24 +8,24 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 
 
-@Controller
+@RestController
 @ApiResponses({
         @ApiResponse(code = HttpServletResponse.SC_BAD_REQUEST, message = HttpResponseErrorMessages.BAD_REQUEST)
 })
 public class StudopediaController {
 
-    private static final Logger log = LoggerFactory.getLogger(StudopediaController.class);
+    private static final Logger log = LogManager.getLogger(StudopediaController.class);
     private final StudopediaService service;
 
     @Inject
