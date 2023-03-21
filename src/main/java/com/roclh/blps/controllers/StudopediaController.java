@@ -29,16 +29,17 @@ public class StudopediaController {
         this.service = service;
     }
 
-    @GetMapping("/article")
-    public StudopediaArticle getArticle(@RequestParam(name = "name") String articleName) throws ArticleNotFoundException, DataValidationException {
+    @PostMapping("/article")
+    @ApiOperation(value = "Get article by name", notes = "Throws exception if Article doesn't exist")
+    public StudopediaArticle getArticle(@RequestParam(name="name") String articleName) throws ArticleNotFoundException {
         log.info("Received request to get article with name {}", articleName);
         ValidationUtils.validate(articleName, String::isEmpty, EMPTY);
         ValidationUtils.validate(articleName, ValidationUtils::containsSpecialCharacters, SPECIAL_CHARACTERS_MESSAGE);
         return service.getArticleByName(articleName);
     }
 
-    @GetMapping("/all-articles")
-    public List<StudopediaArticle> getAllArticle(@RequestParam(name = "page") int page) throws DataValidationException {
+    @PostMapping("/all-articles")
+    public List<StudopediaArticle> getAllArticle(@RequestParam(name="page") int page){
         log.info("Received request to get all the articles");
         ValidationUtils.validate(page, (val) -> val >= 0, WRONG_PAGE_NUMBER);
         return service.getArticlesAsList(page);
@@ -61,7 +62,7 @@ public class StudopediaController {
         return service.getArticleSuggestionBySubStr(search);
     }
 
-    @PostMapping("/article/random")
+    @GetMapping("/article/random")
     public StudopediaArticle randomArticle() throws ArticleNotFoundException {
         log.info("Received a request for random article");
         return service.getRandomArticle();
