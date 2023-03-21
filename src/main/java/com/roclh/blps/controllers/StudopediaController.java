@@ -25,14 +25,14 @@ public class StudopediaController {
         this.service = service;
     }
 
-    @GetMapping("/article")
+    @PostMapping("/article")
     @ApiOperation(value = "Get article by name", notes = "Throws exception if Article doesn't exist")
     public StudopediaArticle getArticle(@RequestParam(name="name") String articleName) throws ArticleNotFoundException {
         log.info("Received request to get article with name {}", articleName);
             return service.getArticleByName(articleName);
     }
 
-    @GetMapping("/all-articles")
+    @PostMapping("/all-articles")
     public List<StudopediaArticle> getAllArticle(@RequestParam(name="page") int page){
         log.info("Received request to get all the articles");
         return service.getArticlesAsList(page);
@@ -50,7 +50,7 @@ public class StudopediaController {
         return service.getArticleSuggestionBySubStr(search);
     }
 
-    @PostMapping("/article/random")
+    @GetMapping("/article/random")
     public StudopediaArticle randomArticle() throws ArticleNotFoundException {
         log.info("Received a request for random article");
         return service.getRandomArticle();
