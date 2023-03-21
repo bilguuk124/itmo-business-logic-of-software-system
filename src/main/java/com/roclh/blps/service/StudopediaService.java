@@ -6,7 +6,6 @@ import com.roclh.blps.database.StudopediaDatabase;
 import com.roclh.blps.entities.Category;
 import com.roclh.blps.entities.StudopediaArticle;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -32,12 +31,12 @@ public class StudopediaService {
 
     public List<StudopediaArticle> getArticlesAsList(int page){
         Pageable pageWithFiveElements = PageRequest.of(page, DEFAULT_SIZE);
-        return articleRepository.findByNameContainsIgnoreCase("", pageWithFiveElements);
+        return articleRepository.findAll(pageWithFiveElements).getContent();
     }
 
     public List<StudopediaArticle> getArticlesAsListWithPageSize(int page, int page_size){
         Pageable pages = PageRequest.of(page, page_size);
-        return articleRepository.findByNameContainsIgnoreCase("", pages);
+        return articleRepository.findAll(pages).getContent();
     }
 
     public List<StudopediaArticle> getArticlesAsPage(String search, int page){

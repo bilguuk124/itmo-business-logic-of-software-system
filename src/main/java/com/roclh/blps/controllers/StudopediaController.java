@@ -8,7 +8,11 @@ import com.roclh.blps.utils.ValidationUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -39,7 +43,7 @@ public class StudopediaController {
     }
 
     @PostMapping("/all-articles")
-    public List<StudopediaArticle> getAllArticle(@RequestParam(name="page") int page ) throws DataValidationException {
+    public List<StudopediaArticle> getAllArticle(@RequestParam(name="page") int page) throws DataValidationException {
         log.info("Received request to get all the articles");
         ValidationUtils.validate(page, (val) -> val < 0, WRONG_PAGE_NUMBER);
         return service.getArticlesAsList(page);
