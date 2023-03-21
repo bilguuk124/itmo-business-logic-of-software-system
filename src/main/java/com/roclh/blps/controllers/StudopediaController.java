@@ -8,7 +8,11 @@ import com.roclh.blps.utils.ValidationUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -75,6 +79,20 @@ public class StudopediaController {
         ValidationUtils.validate(categoryName, String::isEmpty, EMPTY);
         ValidationUtils.validate(page, (val) -> val >= 0, WRONG_PAGE_NUMBER);
         return service.getArticleByCategory(categoryName, page);
+    }
+
+    @PostMapping("/article/add")
+    public void addArticle(
+            @RequestParam(name = "category") String categoryName,
+            @RequestParam(name = "content") String content,
+            @RequestParam(name = "title") String title) throws DataValidationException {
+        log.info("Received a request to add an article with title {}, content {} and category name {}", title, content, categoryName);
+        ValidationUtils.validate(title, ValidationUtils::containsSpecialCharacters, SPECIAL_CHARACTERS_MESSAGE);
+        ValidationUtils.validate(title, String::isEmpty, EMPTY);
+        ValidationUtils.validate(categoryName, ValidationUtils::containsSpecialCharacters, SPECIAL_CHARACTERS_MESSAGE);
+        ValidationUtils.validate(categoryName, String::isEmpty, EMPTY);
+        ValidationUtils.validate(content, String::isEmpty, EMPTY);
+        service.addArticle(title, content, categoryName);
     }
 }
 
