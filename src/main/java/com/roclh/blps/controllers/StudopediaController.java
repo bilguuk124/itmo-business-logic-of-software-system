@@ -25,6 +25,7 @@ public class StudopediaController {
     private static final String SPECIAL_CHARACTERS_MESSAGE = "There is special characters in request";
     private static final String EMPTY = "The request is empty";
     private static final String WRONG_PAGE_NUMBER = "Wrong page number";
+    private static final String WRONG_PAGE_SIZE = "Wrong page size";
     private final StudopediaService service;
 
     @Autowired
@@ -34,8 +35,7 @@ public class StudopediaController {
     }
 
     @PostMapping("/article")
-    @ApiOperation(value = "Get article by name", notes = "Throws exception if Article doesn't exist")
-    public StudopediaArticle getArticle(@RequestParam(name="name") String articleName) throws ArticleNotFoundException {
+    public StudopediaArticle getArticle(@RequestParam(name="name") String articleName) throws ArticleNotFoundException, DataValidationException {
         log.info("Received request to get article with name {}", articleName);
         ValidationUtils.validate(articleName, String::isEmpty, EMPTY);
         ValidationUtils.validate(articleName, ValidationUtils::containsSpecialCharacters, SPECIAL_CHARACTERS_MESSAGE);
@@ -43,10 +43,19 @@ public class StudopediaController {
     }
 
     @PostMapping("/all-articles")
-    public List<StudopediaArticle> getAllArticle(@RequestParam(name="page") int page){
+    public List<StudopediaArticle> getAllArticle(@RequestParam(name="page") int page) throws DataValidationException {
         log.info("Received request to get all the articles");
-        ValidationUtils.validate(page, (val) -> val >= 0, WRONG_PAGE_NUMBER);
+        ValidationUtils.validate(page, (val) -> val < 0, WRONG_PAGE_NUMBER);
         return service.getArticlesAsList(page);
+    }
+
+    @PostMapping("/all-articles-page")
+    public List<StudopediaArticle> getAllArticleWithPageSize(@RequestParam(name="page") int page, @RequestParam(name = "page_size") int pageSize) throws DataValidationException {
+
+        log.info("Received request to get all the articles, page {}, page size {}", page, pageSize);
+        ValidationUtils.validate(page, (val) -> val < 0, WRONG_PAGE_NUMBER);
+        ValidationUtils.validate(pageSize, (val) -> val <= 0, WRONG_PAGE_SIZE);
+        return service.getArticlesAsListWithPageSize(page, pageSize);
     }
 
     @PostMapping("/article/search")
@@ -54,8 +63,18 @@ public class StudopediaController {
         log.info("Received a search for " + search + " article request");
         ValidationUtils.validate(search, String::isEmpty, EMPTY);
         ValidationUtils.validate(search, ValidationUtils::containsSpecialCharacters, SPECIAL_CHARACTERS_MESSAGE);
-        ValidationUtils.validate(page, (val) -> val >= 0, WRONG_PAGE_NUMBER);
+        ValidationUtils.validate(page, (val) -> val < 0, WRONG_PAGE_NUMBER);
         return service.getArticlesAsPage(search, page);
+    }
+
+    @PostMapping("/article/search-page")
+    public List<StudopediaArticle> searchArticleWithPage(@RequestParam(name = "search") String search, @RequestParam(name="page") int page, @RequestParam(name="page_size") int pageSize) throws DataValidationException {
+        log.info("Received a search for " + search + " article request, page: {}, page size: {}", page, pageSize);
+        ValidationUtils.validate(search, String::isEmpty, EMPTY);
+        ValidationUtils.validate(search, ValidationUtils::containsSpecialCharacters, SPECIAL_CHARACTERS_MESSAGE);
+        ValidationUtils.validate(page, (val) -> val < 0, WRONG_PAGE_NUMBER);
+        ValidationUtils.validate(pageSize, (val) -> val <= 0, WRONG_PAGE_SIZE);
+        return service.getArticlesAsPageWithSize(search, page, pageSize);
     }
 
     @PostMapping("/article/suggest")
@@ -78,9 +97,10 @@ public class StudopediaController {
         log.info("Received a request for articles in category: " + categoryName);
         ValidationUtils.validate(categoryName, ValidationUtils::containsSpecialCharacters, SPECIAL_CHARACTERS_MESSAGE);
         ValidationUtils.validate(categoryName, String::isEmpty, EMPTY);
-        ValidationUtils.validate(page, (val) -> val >= 0, WRONG_PAGE_NUMBER);
+        ValidationUtils.validate(page, (val) -> val < 0, WRONG_PAGE_NUMBER);
         return service.getArticleByCategory(categoryName, page);
     }
+
 
     @PostMapping("/article/add")
     public void addArticle(
@@ -95,6 +115,7 @@ public class StudopediaController {
         ValidationUtils.validate(content, String::isEmpty, EMPTY);
         service.addArticle(title, content, categoryName);
         log.info("Successfully added an article with title {}, content {} and category name {}", title, content, categoryName);
+
     }
 }
 

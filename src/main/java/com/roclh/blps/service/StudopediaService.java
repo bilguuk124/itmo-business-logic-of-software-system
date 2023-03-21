@@ -21,7 +21,7 @@ public class StudopediaService {
     private final static String ARTICLE_EXISTS = "Article already exists";
 
     private final int FIRST_ARTICLE = 0;
-    private final int MAX_ARTICLE = 5;
+    private final int DEFAULT_SIZE = 5;
 
     private final StudopediaDatabase articleRepository;
     private final CategoryDatabase categoryRepository;
@@ -33,13 +33,23 @@ public class StudopediaService {
     }
 
     public List<StudopediaArticle> getArticlesAsList(int page){
-        Pageable pageWithFiveElements = PageRequest.of(page, MAX_ARTICLE);
-        return articleRepository.findByNameContainsIgnoreCase("", pageWithFiveElements);
+        Pageable pageWithFiveElements = PageRequest.of(page, DEFAULT_SIZE);
+        return articleRepository.findAll(pageWithFiveElements).getContent();
+    }
+
+    public List<StudopediaArticle> getArticlesAsListWithPageSize(int page, int page_size){
+        Pageable pages = PageRequest.of(page, page_size);
+        return articleRepository.findAll(pages).getContent();
     }
 
     public List<StudopediaArticle> getArticlesAsPage(String search, int page){
-        Pageable pageWithFiveElements = PageRequest.of(page, MAX_ARTICLE);
+        Pageable pageWithFiveElements = PageRequest.of(page, DEFAULT_SIZE);
         return articleRepository.findByNameContainsIgnoreCase(search, pageWithFiveElements);
+    }
+
+    public List<StudopediaArticle> getArticlesAsPageWithSize(String search, int page, int pageSize){
+        Pageable pages = PageRequest.of(page, pageSize);
+        return articleRepository.findByNameContainsIgnoreCase(search, pages);
     }
 
     public StudopediaArticle getArticleByID(Long id) throws ArticleNotFoundException {
@@ -55,15 +65,22 @@ public class StudopediaService {
     }
 
     public List<StudopediaArticle> getArticleSuggestionBySubStr(String subString){
-        Pageable pageOneWithFiveElements = PageRequest.of(FIRST_ARTICLE, MAX_ARTICLE);
+        Pageable pageOneWithFiveElements = PageRequest.of(FIRST_ARTICLE, DEFAULT_SIZE);
         return articleRepository.findByNameContainsIgnoreCase(subString, pageOneWithFiveElements);
     }
 
     public List<StudopediaArticle> getArticleByCategory(String category, int page) throws ArticleNotFoundException {
-        Pageable pageWithFiveElements = PageRequest.of(page, MAX_ARTICLE);
+        Pageable pageWithFiveElements = PageRequest.of(page, DEFAULT_SIZE);
         Optional<Category> categoryOptional = categoryRepository.findByNameLikeIgnoreCase(category);
         if (categoryOptional.isEmpty()) throw new ArticleNotFoundException();
         return articleRepository.findByCategoryEquals(categoryOptional.get(), pageWithFiveElements);
+    }
+
+    public List<StudopediaArticle> getArticleByCategoryWithSize(String category, int page, int pageSize) throws ArticleNotFoundException {
+        Pageable pages = PageRequest.of(page, pageSize);
+        Optional<Category> categoryOptional = categoryRepository.findByNameLikeIgnoreCase(category);
+        if (categoryOptional.isEmpty()) throw new ArticleNotFoundException();
+        return articleRepository.findByCategoryEquals(categoryOptional.get(), pages);
     }
 
     public List<StudopediaArticle> getAllArticles(){
