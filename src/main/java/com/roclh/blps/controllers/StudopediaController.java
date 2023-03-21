@@ -101,6 +101,17 @@ public class StudopediaController {
         return service.getArticleByCategory(categoryName, page);
     }
 
+    @PostMapping("/article/category-page")
+    public List<StudopediaArticle> getArticlesByCategoryWithPage(
+            @RequestParam(name="category") String categoryName, @RequestParam(name="page") int page, @RequestParam(name="page_size") int pageSize) throws ArticleNotFoundException, DataValidationException {
+        log.info("Received a request for articles in category: {}, page: {}, page size: {}", categoryName, page, pageSize);
+        ValidationUtils.validate(categoryName, ValidationUtils::containsSpecialCharacters, SPECIAL_CHARACTERS_MESSAGE);
+        ValidationUtils.validate(categoryName, String::isEmpty, EMPTY);
+        ValidationUtils.validate(page, (val) -> val <= 0, WRONG_PAGE_NUMBER);
+        ValidationUtils.validate(pageSize, (val) -> val < 0, WRONG_PAGE_SIZE);
+        return service.getArticleByCategoryWithSize(categoryName, page, pageSize);
+    }
+
 
     @PostMapping("/article/add")
     public void addArticle(
