@@ -93,6 +93,7 @@ public class StudopediaController {
         ValidationUtils.validate(categoryName, String::isEmpty, EMPTY);
         ValidationUtils.validate(content, String::isEmpty, EMPTY);
         service.addArticle(title, content, categoryName);
+        log.info("Successfully added an article with title {}, content {} and category name {}", title, content, categoryName);
     }
 }
 
