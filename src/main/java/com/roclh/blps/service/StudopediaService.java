@@ -4,19 +4,22 @@ import com.roclh.blps.Exceptions.ArticleNotFoundException;
 import com.roclh.blps.Exceptions.DataValidationException;
 import com.roclh.blps.database.CategoryDatabase;
 import com.roclh.blps.database.StudopediaDatabase;
+import com.roclh.blps.entities.Account;
 import com.roclh.blps.entities.Category;
 import com.roclh.blps.entities.StudopediaArticle;
 import com.roclh.blps.utils.ValidationUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
 @Service
+@RequiredArgsConstructor
 public class StudopediaService {
     private final static String ARTICLE_EXISTS = "Article already exists";
 
@@ -25,12 +28,8 @@ public class StudopediaService {
 
     private final StudopediaDatabase articleRepository;
     private final CategoryDatabase categoryRepository;
+    private final Principal principal;
 
-    @Autowired
-    public StudopediaService(StudopediaDatabase articleRepository, CategoryDatabase categoryRepository){
-        this.articleRepository = articleRepository;
-        this.categoryRepository = categoryRepository;
-    }
 
     public List<StudopediaArticle> getArticlesAsList(int page){
         Pageable pageWithFiveElements = PageRequest.of(page, DEFAULT_SIZE);
@@ -108,7 +107,8 @@ public class StudopediaService {
         articleRepository.save(new StudopediaArticle(
                 title,
                 content,
-                categoryObj
+                categoryObj,
+                ((Account) principal).getId()
         ));
     }
 

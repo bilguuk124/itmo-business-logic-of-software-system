@@ -7,7 +7,6 @@ import com.roclh.blps.entities.StudopediaArticle;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
@@ -32,37 +31,44 @@ public class StudopediaArticleConfig {
             StudopediaArticle article1 = new StudopediaArticle(
                     "Why we find the X?",
                     "We find x because we want to",
-                    category1
+                    category1,
+                    1L
             );
             StudopediaArticle article2 = new StudopediaArticle(
                     "Newton. Why he was virgin?",
                     "Because he became insane after an apple fell down on his head",
-                    physics
+                    physics,
+                    1L
             );
             StudopediaArticle article3 = new StudopediaArticle(
                     "Языки программирования.",
                     "ЭВМ может выполнить программу, представленную только на машинном языке.",
-                    programming
+                    programming,
+                    1L
             );
             StudopediaArticle article4 = new StudopediaArticle(
                     "Это, опять же, «перекус» предел — 200 ккал.",
                     "Лучше всего - фрукты, домашние сухарики, нежирный сыр, чай.",
-                    shibal
+                    shibal,
+                    1L
             );
             StudopediaArticle article5 = new StudopediaArticle(
                     "ПОЯСНИТЕЛЬНАЯ ЗАПИСКА",
                     "Учебное пособие предназначено в определенной мере, заполнить существующий пробел и помочь студентам в изучении философии.",
-                    russian
+                    russian,
+                    1L
             );
             StudopediaArticle article6 = new StudopediaArticle(
                     "РЕФЕРУВАННЯ ПУБЛІЦИСТИЧНОГО ТЕКСТУ",
                     "Welche Informationen enthalten die Überschriften?",
-                    english
+                    english,
+                    1L
             );
             StudopediaArticle article7 = new StudopediaArticle(
                     "Что не должен делать следователь при допросе потерпевшей?",
                     "Какие СД следуют после допроса потерпевшей (а иногда и до)?",
-                    lawAndOrder
+                    lawAndOrder,
+                    1L
             );
 
             repository.saveAll(List.of(article6,article2, article3, article4, article5, article7, article1));
