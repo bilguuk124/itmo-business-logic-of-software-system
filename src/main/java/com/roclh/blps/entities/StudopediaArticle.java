@@ -1,7 +1,16 @@
 package com.roclh.blps.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,8 +36,8 @@ public class StudopediaArticle {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    private int up;
-    private int down;
+    private int upVotes;
+    private int downVotes;
     private String content;
 
     private Long accountId;
@@ -38,28 +47,29 @@ public class StudopediaArticle {
     private List<Comment> comments;
 
     public StudopediaArticle(String name, String content, Category category, Long accountId) {
+        this.id = accountId;
         this.name = name;
         this.content = content;
         this.category = category;
-        this.up = 0;
-        this.down = 0;
+        this.upVotes = 0;
+        this.downVotes = 0;
         this.comments = new ArrayList<>();
     }
 
     public void addUp(){
-        this.up++;
+        this.upVotes++;
     }
 
     public void addDown(){
-        this.down++;
+        this.downVotes++;
     }
 
     public void removeUp(){
-        this.up--;
+        this.upVotes--;
     }
 
     public void removeDown(){
-        this.down--;
+        this.downVotes--;
     }
 
     public void addComment(Comment comment){

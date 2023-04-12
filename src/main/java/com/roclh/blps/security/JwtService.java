@@ -1,4 +1,4 @@
-package com.roclh.blps.config;
+package com.roclh.blps.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

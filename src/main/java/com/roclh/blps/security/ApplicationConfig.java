@@ -1,4 +1,4 @@
-package com.roclh.blps.config;
+package com.roclh.blps.security;
 
 import com.roclh.blps.database.AccountDatabase;
 import com.roclh.blps.entities.Account;

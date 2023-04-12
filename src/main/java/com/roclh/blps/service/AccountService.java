@@ -1,10 +1,10 @@
 package com.roclh.blps.service;
 
 import com.roclh.blps.Exceptions.AccountNotFountException;
-import com.roclh.blps.config.JwtService;
-import com.roclh.blps.controllers.AuthenticationResponse;
-import com.roclh.blps.controllers.LoginRequest;
-import com.roclh.blps.controllers.RegisterRequest;
+import com.roclh.blps.security.JwtService;
+import com.roclh.blps.RequestAndResponse.AuthenticationResponse;
+import com.roclh.blps.RequestAndResponse.LoginRequest;
+import com.roclh.blps.RequestAndResponse.RegisterRequest;
 import com.roclh.blps.database.AccountDatabase;
 import com.roclh.blps.entities.Account;
 import com.roclh.blps.entities.Role;
@@ -29,7 +29,7 @@ public class AccountService {
     }
 
     public AuthenticationResponse register(RegisterRequest request){
-        var user = Account.builder()
+        Account user = Account.builder()
                 .firstName(request.getFistName())
                 .lastName(request.getLastName())
                 .username(request.getUsername())

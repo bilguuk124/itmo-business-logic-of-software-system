@@ -1,4 +1,4 @@
-package com.roclh.blps.controllers;
+package com.roclh.blps.RequestAndResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

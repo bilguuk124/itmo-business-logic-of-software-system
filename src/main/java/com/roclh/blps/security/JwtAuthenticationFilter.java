@@ -1,4 +1,4 @@
-package com.roclh.blps.config;
+package com.roclh.blps.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

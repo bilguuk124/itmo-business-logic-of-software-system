@@ -2,12 +2,19 @@ package com.roclh.blps.controllers;
 
 import com.roclh.blps.Exceptions.AccountNotFountException;
 import com.roclh.blps.entities.Account;
+import com.roclh.blps.RequestAndResponse.AuthenticationResponse;
+import com.roclh.blps.RequestAndResponse.LoginRequest;
+import com.roclh.blps.RequestAndResponse.RegisterRequest;
 import com.roclh.blps.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -38,7 +45,7 @@ public class AccountController {
         return ResponseEntity.ok(accountService.login(request));
     }
 
-    @PostMapping("/admin-register")
+    @PostMapping("/register/admin")
     public ResponseEntity<AuthenticationResponse> registerAdmin(
             @RequestBody RegisterRequest request
     ){
