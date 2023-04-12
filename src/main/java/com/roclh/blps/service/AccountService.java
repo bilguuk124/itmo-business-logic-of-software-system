@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +43,7 @@ public class AccountService {
     }
 
     public AuthenticationResponse registerAdmin(RegisterRequest request){
-        var admin = Account.builder()
+        Account admin = Account.builder()
                 .firstName(request.getFistName())
                 .lastName(request.getLastName())
                 .username(request.getUsername())
@@ -61,7 +62,7 @@ public class AccountService {
                         request.getPassword()
                 )
         );
-        var user = database.findByUsername(request.getUsername());
+        Optional<Account> user = database.findByUsername(request.getUsername());
         if (user.isEmpty()) throw new AccountNotFountException();
         Account account = user.get();
         var jwtToken = jwtService.generateToken(account);
