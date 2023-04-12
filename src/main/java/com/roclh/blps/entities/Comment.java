@@ -39,7 +39,7 @@ public class Comment {
 
     String comment;
 
-    public Comment(StudopediaArticle article, Account account, String comment){
+    public Comment(StudopediaArticle article, Account account, String comment) {
         this.article = article;
         this.accountId = account.getId();
         this.comment = comment;

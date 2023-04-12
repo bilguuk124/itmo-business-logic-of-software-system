@@ -4,9 +4,9 @@ import com.roclh.blps.Exceptions.ArticleNotFoundException;
 import com.roclh.blps.database.AccountDatabase;
 import com.roclh.blps.database.CommentDatabase;
 import com.roclh.blps.database.StudopediaDatabase;
+import com.roclh.blps.entities.Account;
 import com.roclh.blps.entities.Comment;
 import com.roclh.blps.entities.StudopediaArticle;
-import com.roclh.blps.entities.Account;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class ArticleService {
         studopediaDatabase.save(article);
     }
 
-    public void downAnArticle(Long articleId) throws ArticleNotFoundException{
+    public void downAnArticle(Long articleId) throws ArticleNotFoundException {
         Optional<StudopediaArticle> optional = studopediaDatabase.findByIdEquals(articleId);
         if (optional.isEmpty()) throw new ArticleNotFoundException();
         StudopediaArticle article = optional.get();
@@ -44,7 +44,7 @@ public class ArticleService {
         studopediaDatabase.save(article);
     }
 
-    public void cancelUpAnArticle(Long articleId) throws ArticleNotFoundException{
+    public void cancelUpAnArticle(Long articleId) throws ArticleNotFoundException {
         Optional<StudopediaArticle> optional = studopediaDatabase.findByIdEquals(articleId);
         if (optional.isEmpty()) throw new ArticleNotFoundException();
         StudopediaArticle article = optional.get();
@@ -52,9 +52,9 @@ public class ArticleService {
         studopediaDatabase.save(article);
     }
 
-    public void cancelDownAnArticle(Long articleId) throws ArticleNotFoundException{
+    public void cancelDownAnArticle(Long articleId) throws ArticleNotFoundException {
         Optional<StudopediaArticle> optional = studopediaDatabase.findByIdEquals(articleId);
-        if(optional.isEmpty()) throw new ArticleNotFoundException();
+        if (optional.isEmpty()) throw new ArticleNotFoundException();
         StudopediaArticle article = optional.get();
         article.removeDown();
         studopediaDatabase.save(article);

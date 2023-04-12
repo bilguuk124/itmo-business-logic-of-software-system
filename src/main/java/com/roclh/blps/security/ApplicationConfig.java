@@ -21,6 +21,7 @@ import java.util.Optional;
 public class ApplicationConfig {
 
     private final AccountDatabase accountDatabase;
+
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {

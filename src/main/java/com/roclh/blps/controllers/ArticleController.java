@@ -30,17 +30,17 @@ public class ArticleController {
     }
 
     @PutMapping("/down")
-    public void downAnArticle(@PathVariable(name = "article_id") Long articleId) throws ArticleNotFoundException{
+    public void downAnArticle(@PathVariable(name = "article_id") Long articleId) throws ArticleNotFoundException {
         service.downAnArticle(articleId);
     }
 
     @DeleteMapping("/up")
-    public void cancelUp(@PathVariable(name = "article_id") Long articleId) throws ArticleNotFoundException{
+    public void cancelUp(@PathVariable(name = "article_id") Long articleId) throws ArticleNotFoundException {
         service.cancelUpAnArticle(articleId);
     }
 
     @DeleteMapping("/down")
-    public void cancelDown(@PathVariable(name = "article_id") Long articleId) throws ArticleNotFoundException{
+    public void cancelDown(@PathVariable(name = "article_id") Long articleId) throws ArticleNotFoundException {
         service.cancelDownAnArticle(articleId);
     }
 
@@ -51,7 +51,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/comment")
-    public void deleteComment(@PathVariable(name = "article_id") Long articleId, @RequestParam(name = "comment") String commentString) throws ArticleNotFoundException{
+    public void deleteComment(@PathVariable(name = "article_id") Long articleId, @RequestParam(name = "comment") String commentString) throws ArticleNotFoundException {
         Long accountId = ((Account) principal).getId();
         service.deleteComment(articleId, accountId, commentString);
     }

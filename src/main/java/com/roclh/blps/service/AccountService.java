@@ -1,13 +1,13 @@
 package com.roclh.blps.service;
 
 import com.roclh.blps.Exceptions.AccountNotFountException;
-import com.roclh.blps.security.JwtService;
 import com.roclh.blps.RequestAndResponse.AuthenticationResponse;
 import com.roclh.blps.RequestAndResponse.LoginRequest;
 import com.roclh.blps.RequestAndResponse.RegisterRequest;
 import com.roclh.blps.database.AccountDatabase;
 import com.roclh.blps.entities.Account;
 import com.roclh.blps.entities.Role;
+import com.roclh.blps.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,11 +25,11 @@ public class AccountService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public List<Account> findAll(){
+    public List<Account> findAll() {
         return database.findAll();
     }
 
-    public AuthenticationResponse register(RegisterRequest request){
+    public AuthenticationResponse register(RegisterRequest request) {
         Account user = Account.builder()
                 .firstName(request.getFistName())
                 .lastName(request.getLastName())
@@ -42,7 +42,7 @@ public class AccountService {
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
 
-    public AuthenticationResponse registerAdmin(RegisterRequest request){
+    public AuthenticationResponse registerAdmin(RegisterRequest request) {
         Account admin = Account.builder()
                 .firstName(request.getFistName())
                 .lastName(request.getLastName())

@@ -36,7 +36,7 @@ public class StudopediaController {
     }
 
     @GetMapping("/articles/{name}")
-    public StudopediaArticle getArticle(@PathVariable(name="name") String articleName) throws ArticleNotFoundException, DataValidationException {
+    public StudopediaArticle getArticle(@PathVariable(name = "name") String articleName) throws ArticleNotFoundException, DataValidationException {
         log.info("Received request to get article with name {}", articleName);
         ValidationUtils.validate(articleName, String::isEmpty, EMPTY);
         ValidationUtils.validate(articleName, ValidationUtils::containsSpecialCharacters, SPECIAL_CHARACTERS_MESSAGE);
@@ -44,14 +44,14 @@ public class StudopediaController {
     }
 
     @GetMapping("/articles")
-    public List<StudopediaArticle> getAllArticle(@RequestParam(name="page") int page) throws DataValidationException {
+    public List<StudopediaArticle> getAllArticle(@RequestParam(name = "page") int page) throws DataValidationException {
         log.info("Received request to get all the articles");
         ValidationUtils.validate(page, (val) -> val < 0, WRONG_PAGE_NUMBER);
         return service.getArticlesAsList(page);
     }
 
     @GetMapping("/articles-page")
-    public List<StudopediaArticle> getAllArticleWithPageSize(@RequestParam(name="page") int page, @RequestParam(name = "page_size") int pageSize) throws DataValidationException {
+    public List<StudopediaArticle> getAllArticleWithPageSize(@RequestParam(name = "page") int page, @RequestParam(name = "page_size") int pageSize) throws DataValidationException {
 
         log.info("Received request to get all the articles, page {}, page size {}", page, pageSize);
         ValidationUtils.validate(page, (val) -> val < 0, WRONG_PAGE_NUMBER);
@@ -69,7 +69,7 @@ public class StudopediaController {
     }
 
     @GetMapping("/article/search-page")
-    public List<StudopediaArticle> searchArticleWithPage(@RequestParam(name = "search") String search, @RequestParam(name="page") int page, @RequestParam(name="page_size") int pageSize) throws DataValidationException {
+    public List<StudopediaArticle> searchArticleWithPage(@RequestParam(name = "search") String search, @RequestParam(name = "page") int page, @RequestParam(name = "page_size") int pageSize) throws DataValidationException {
         log.info("Received a search for " + search + " article request, page: {}, page size: {}", page, pageSize);
         ValidationUtils.validate(search, String::isEmpty, EMPTY);
         ValidationUtils.validate(search, ValidationUtils::containsSpecialCharacters, SPECIAL_CHARACTERS_MESSAGE);
@@ -104,7 +104,7 @@ public class StudopediaController {
 
     @GetMapping("/article/category-page")
     public List<StudopediaArticle> getArticlesByCategoryWithPage(
-            @RequestParam(name="category") String categoryName, @RequestParam(name="page") int page, @RequestParam(name="page_size") int pageSize) throws ArticleNotFoundException, DataValidationException {
+            @RequestParam(name = "category") String categoryName, @RequestParam(name = "page") int page, @RequestParam(name = "page_size") int pageSize) throws ArticleNotFoundException, DataValidationException {
         log.info("Received a request for articles in category: {}, page: {}, page size: {}", categoryName, page, pageSize);
         ValidationUtils.validate(categoryName, ValidationUtils::containsSpecialCharacters, SPECIAL_CHARACTERS_MESSAGE);
         ValidationUtils.validate(categoryName, String::isEmpty, EMPTY);

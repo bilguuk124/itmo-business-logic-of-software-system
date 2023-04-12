@@ -12,11 +12,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface StudopediaDatabase extends JpaRepository<StudopediaArticle, Long>{
+public interface StudopediaDatabase extends JpaRepository<StudopediaArticle, Long> {
     @Query("select distinct s from StudopediaArticle s")
     List<StudopediaArticle> getAllArticles();
+
     List<StudopediaArticle> findByCategoryEquals(Category category, Pageable pageable);
+
     List<StudopediaArticle> findByNameContainsIgnoreCase(String name, Pageable pageable);
+
     Optional<StudopediaArticle> findByNameEqualsIgnoreCase(String name);
 
     Optional<StudopediaArticle> findByIdEquals(Long id);

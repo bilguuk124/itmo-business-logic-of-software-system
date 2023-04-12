@@ -1,10 +1,10 @@
 package com.roclh.blps.controllers;
 
 import com.roclh.blps.Exceptions.AccountNotFountException;
-import com.roclh.blps.entities.Account;
 import com.roclh.blps.RequestAndResponse.AuthenticationResponse;
 import com.roclh.blps.RequestAndResponse.LoginRequest;
 import com.roclh.blps.RequestAndResponse.RegisterRequest;
+import com.roclh.blps.entities.Account;
 import com.roclh.blps.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
@@ -27,14 +27,14 @@ public class AccountController {
     private final AccountService accountService;
 
     @GetMapping("/accounts")
-    public List<Account> getAllAccounts(){
-        return  accountService.findAll();
+    public List<Account> getAllAccounts() {
+        return accountService.findAll();
     }
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> registerAccount(
             @RequestBody RegisterRequest request
-    ){
+    ) {
         return ResponseEntity.ok(accountService.register(request));
     }
 
@@ -48,7 +48,7 @@ public class AccountController {
     @PostMapping("/register/admin")
     public ResponseEntity<AuthenticationResponse> registerAdmin(
             @RequestBody RegisterRequest request
-    ){
+    ) {
         return ResponseEntity.ok(accountService.registerAdmin(request));
     }
 }

@@ -16,7 +16,7 @@ public class StudopediaArticleConfig {
 
 
     @Bean
-    CommandLineRunner commandLineRunner(StudopediaDatabase repository, CategoryDatabase categoryRepository){
+    CommandLineRunner commandLineRunner(StudopediaDatabase repository, CategoryDatabase categoryRepository) {
         return args -> {
             Category category1 = new Category("Math");
             Category physics = new Category("Physics");
@@ -71,7 +71,7 @@ public class StudopediaArticleConfig {
                     1L
             );
 
-            repository.saveAll(List.of(article6,article2, article3, article4, article5, article7, article1));
+            repository.saveAll(List.of(article6, article2, article3, article4, article5, article7, article1));
         };
     }
 }

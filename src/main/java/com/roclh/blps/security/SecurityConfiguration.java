@@ -22,10 +22,10 @@ public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
-    public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf()
-            .disable()
+                .csrf()
+                .disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/auth/register", "/api/auth/login")
                 .permitAll()

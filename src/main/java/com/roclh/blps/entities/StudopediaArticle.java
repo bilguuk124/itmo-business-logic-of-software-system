@@ -56,23 +56,23 @@ public class StudopediaArticle {
         this.comments = new ArrayList<>();
     }
 
-    public void addUp(){
+    public void addUp() {
         this.upVotes++;
     }
 
-    public void addDown(){
+    public void addDown() {
         this.downVotes++;
     }
 
-    public void removeUp(){
+    public void removeUp() {
         this.upVotes--;
     }
 
-    public void removeDown(){
+    public void removeDown() {
         this.downVotes--;
     }
 
-    public void addComment(Comment comment){
+    public void addComment(Comment comment) {
         comments.add(comment);
     }
 }
