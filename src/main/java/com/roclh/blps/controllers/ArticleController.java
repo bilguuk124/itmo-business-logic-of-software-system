@@ -22,7 +22,7 @@ public class ArticleController {
 
     private final Logger log = LogManager.getLogger(ArticleController.class);
     private final ArticleService service;
-    private final Principal principal;
+    private Principal principal;
 
     @PutMapping("/up")
     public void upAnArticle(@PathVariable(name = "article_id") Long articleId) throws ArticleNotFoundException {
@@ -54,6 +54,12 @@ public class ArticleController {
     public void deleteComment(@PathVariable(name = "article_id") Long articleId, @RequestParam(name = "comment") String commentString) throws ArticleNotFoundException {
         Long accountId = ((Account) principal).getId();
         service.deleteComment(articleId, accountId, commentString);
+    }
+
+    @DeleteMapping("/")
+    public void deleteArticle(@PathVariable(name = "article_id") Long articleId) throws ArticleNotFoundException {
+        Long accountId = ((Account) principal).getId();
+        service.deleteArticle(articleId, accountId);
     }
 
 }

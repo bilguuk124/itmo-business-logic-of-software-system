@@ -28,13 +28,14 @@ public class AccountController {
 
     @GetMapping("/accounts")
     public List<Account> getAllAccounts() {
+        log.info("Got request to list all accounts");
         return accountService.findAll();
     }
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> registerAccount(
             @RequestBody RegisterRequest request
-    ) {
+    ) throws AccountNotFountException {
         return ResponseEntity.ok(accountService.register(request));
     }
 

@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -28,6 +30,8 @@ public class ArticleService {
         this.accountDatabase = accountDatabase;
     }
 
+
+    @Transactional
     public void upAnArticle(Long articleId) throws ArticleNotFoundException {
         Optional<StudopediaArticle> optional = studopediaDatabase.findByIdEquals(articleId);
         if (optional.isEmpty()) throw new ArticleNotFoundException();
@@ -36,6 +40,7 @@ public class ArticleService {
         studopediaDatabase.save(article);
     }
 
+    @Transactional
     public void downAnArticle(Long articleId) throws ArticleNotFoundException {
         Optional<StudopediaArticle> optional = studopediaDatabase.findByIdEquals(articleId);
         if (optional.isEmpty()) throw new ArticleNotFoundException();
@@ -44,6 +49,7 @@ public class ArticleService {
         studopediaDatabase.save(article);
     }
 
+    @Transactional
     public void cancelUpAnArticle(Long articleId) throws ArticleNotFoundException {
         Optional<StudopediaArticle> optional = studopediaDatabase.findByIdEquals(articleId);
         if (optional.isEmpty()) throw new ArticleNotFoundException();
@@ -52,6 +58,7 @@ public class ArticleService {
         studopediaDatabase.save(article);
     }
 
+    @Transactional
     public void cancelDownAnArticle(Long articleId) throws ArticleNotFoundException {
         Optional<StudopediaArticle> optional = studopediaDatabase.findByIdEquals(articleId);
         if (optional.isEmpty()) throw new ArticleNotFoundException();
@@ -60,6 +67,7 @@ public class ArticleService {
         studopediaDatabase.save(article);
     }
 
+    @Transactional
     public void commentArticle(Long articleId, Long accountId, String commentString) throws ArticleNotFoundException {
         Optional<StudopediaArticle> article = studopediaDatabase.findByIdEquals(articleId);
         Optional<Account> account = accountDatabase.findByIdEquals(accountId);
@@ -68,9 +76,20 @@ public class ArticleService {
         commentDatabase.save(comment);
     }
 
+    @Transactional
     public void deleteComment(Long articleId, Long accountId, String commentString) throws ArticleNotFoundException {
-        Optional<Comment> comment = commentDatabase.findByArticle_IdEqualsAndAccountIdEqualsAndCommentLike(articleId, accountId, commentString);
+        Optional<StudopediaArticle> article = studopediaDatabase.findByIdEquals(articleId);
+        if (article.isEmpty()) throw new ArticleNotFoundException();
+        Optional<Comment> comment = commentDatabase.findCommentByStudopediaArticleAndAccountIdAndComment(article.get(), accountId, commentString);
         if (comment.isEmpty()) throw new ArticleNotFoundException();
         commentDatabase.delete(comment.get());
+    }
+
+    @Transactional
+    public void deleteArticle(Long articleId, Long accountId) throws ArticleNotFoundException {
+        Optional<StudopediaArticle> article = studopediaDatabase.findByIdEquals(articleId);
+        if (article.isEmpty()) throw new ArticleNotFoundException();
+        if (!Objects.equals(article.get().getAccountId(), accountId)) throw new ArticleNotFoundException();
+        studopediaDatabase.delete(article.get());
     }
 }

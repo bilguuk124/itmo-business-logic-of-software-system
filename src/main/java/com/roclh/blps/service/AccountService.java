@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,10 @@ public class AccountService {
         return database.findAll();
     }
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    @Transactional
+    public AuthenticationResponse register(RegisterRequest request) throws AccountNotFountException {
+        Optional<Account> optional = database.findByUsername(request.getUsername());
+        if(optional.isPresent()) throw new AccountNotFountException();
         Account user = Account.builder()
                 .firstName(request.getFistName())
                 .lastName(request.getLastName())
@@ -42,6 +46,7 @@ public class AccountService {
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
 
+    @Transactional
     public AuthenticationResponse registerAdmin(RegisterRequest request) {
         Account admin = Account.builder()
                 .firstName(request.getFistName())

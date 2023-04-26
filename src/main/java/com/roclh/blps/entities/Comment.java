@@ -1,19 +1,21 @@
 package com.roclh.blps.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "comment")
@@ -30,17 +32,18 @@ public class Comment {
     private Long id;
 
     @JsonBackReference(value = "article_reference")
-    @Id
     @ManyToOne(cascade = CascadeType.DETACH)
-    StudopediaArticle article;
+    @JoinColumn(name="article_id", nullable = false)
+    @Id
+    private StudopediaArticle studopediaArticle;
 
     @Id
-    Long accountId;
+    private Long accountId;
 
     String comment;
 
     public Comment(StudopediaArticle article, Account account, String comment) {
-        this.article = article;
+        this.studopediaArticle = article;
         this.accountId = account.getId();
         this.comment = comment;
     }

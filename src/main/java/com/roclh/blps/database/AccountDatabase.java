@@ -2,7 +2,9 @@ package com.roclh.blps.database;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.roclh.blps.entities.Account;
 import com.roclh.blps.utils.AccountIdGenerator;
 import lombok.Getter;
@@ -14,6 +16,7 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Optional;
 
 @Getter
@@ -24,13 +27,13 @@ public class AccountDatabase {
     private final String FILE = "accounts.xml";
     @JsonIgnore
     File file = new File(FILE);
-    @JacksonXmlProperty(localName = "account")
 
-    private ArrayList<Account> accountDatabase;
+    @JacksonXmlElementWrapper(localName = "accounts")
+    private LinkedList<Account> accountDatabase;
 
     @SneakyThrows
     public AccountDatabase() {
-        accountDatabase = new ArrayList<>();
+        accountDatabase = new LinkedList<>();
     }
 
     @PostConstruct
@@ -50,7 +53,7 @@ public class AccountDatabase {
         xmlMapper.writeValue(file, this);
     }
 
-    public ArrayList<Account> findAll() {
+    public LinkedList<Account> findAll() {
         return accountDatabase;
     }
 

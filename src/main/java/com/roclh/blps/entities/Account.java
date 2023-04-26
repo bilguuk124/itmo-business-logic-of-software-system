@@ -2,44 +2,61 @@ package com.roclh.blps.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @Builder
-@AllArgsConstructor
-public class Account implements UserDetails {
-    @JacksonXmlProperty(isAttribute = true)
+@JacksonXmlRootElement(localName = "account")
+public class Account implements UserDetails, Serializable {
+    @JacksonXmlProperty(localName = "id")
     private Long id;
-
+    @JacksonXmlProperty
     private String firstName;
+
+    @JacksonXmlProperty
     private String lastName;
 
+    @JacksonXmlProperty
     private String username;
+    @JacksonXmlProperty
     private String password;
 
-    private List<Comment> comments;
-
+//    private List<Comment> comments;
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public void setId(Long id) {
-        this.id = id;
+    public Account() {
     }
 
-    public void setUsername(String username) {
+//    public Account(Long id, String lastName, String firstName, String username, String password, List<Comment> comments, Role role) {
+//        this.id = id;
+//        this.lastName = lastName;
+//        this.firstName = firstName;
+//        this.username = username;
+//        this.password = password;
+//        this.comments = comments;
+//        this.role = role;
+//    }
+
+
+    public Account(Long id, String firstName, String lastName, String username, String password, Role role) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.username = username;
+        this.password = password;
+        this.role = role;
     }
 
     @JsonIgnore

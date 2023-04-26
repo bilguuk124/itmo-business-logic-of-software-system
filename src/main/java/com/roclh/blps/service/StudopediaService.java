@@ -8,18 +8,18 @@ import com.roclh.blps.entities.Account;
 import com.roclh.blps.entities.Category;
 import com.roclh.blps.entities.StudopediaArticle;
 import com.roclh.blps.utils.ValidationUtils;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
 @Service
-@RequiredArgsConstructor
 public class StudopediaService {
     private final static String ARTICLE_EXISTS = "Article already exists";
 
@@ -27,7 +27,13 @@ public class StudopediaService {
 
     private final StudopediaDatabase articleRepository;
     private final CategoryDatabase categoryRepository;
-    private final Principal principal;
+    private Account principal;
+
+    @Autowired
+    public StudopediaService(StudopediaDatabase database, CategoryDatabase categoryRepository){
+        this.articleRepository = database;
+        this.categoryRepository = categoryRepository;
+    }
 
 
     public List<StudopediaArticle> getArticlesAsList(int page) {
@@ -83,7 +89,7 @@ public class StudopediaService {
     }
 
     public List<StudopediaArticle> getAllArticles() {
-        return articleRepository.getAllArticles();
+        return articleRepository.findAll();
     }
 
     public long getArticleCount() {
@@ -100,21 +106,34 @@ public class StudopediaService {
         return allArticles.get(randomIndex);
     }
 
+    @Transactional
     public void addArticle(String title, String content, String category) throws DataValidationException {
         ValidationUtils.validate(title, (val) -> articleRepository.findByNameEqualsIgnoreCase(val).isPresent(), ARTICLE_EXISTS);
         Category categoryObj = getOrCreateCategory(category);
-        categoryRepository.save(categoryObj);
+        principal = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(principal.getUsername());
         articleRepository.save(new StudopediaArticle(
                 title,
                 content,
                 categoryObj,
-                ((Account) principal).getId()
+                principal.getId()
         ));
     }
 
-    private Category getOrCreateCategory(String category) {
-        return categoryRepository.findByNameLikeIgnoreCase(category).orElse(new Category(category));
+    @Transactional
+    public Category getOrCreateCategory(String categoryName) {
+        Optional<Category> optional = categoryRepository.findByNameLikeIgnoreCase(categoryName);
+        Category category;
+        if (optional.isEmpty()) {
+            category = new Category(categoryName);
+            categoryRepository.save(category);
+        }
+        else {
+            category = optional.get();
+        }
+        return category;
     }
+
 
 
 }

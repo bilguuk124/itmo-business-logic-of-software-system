@@ -114,7 +114,7 @@ public class StudopediaController {
     }
 
 
-    @PostMapping("/articles")
+    @PostMapping("/article")
     public void addArticle(
             @RequestParam(name = "category") String categoryName,
             @RequestParam(name = "content") String content,
