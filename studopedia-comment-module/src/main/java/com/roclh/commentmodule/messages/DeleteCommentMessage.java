@@ -1,4 +1,4 @@
-package com.roclh.commentmodule.DTO;
+package com.roclh.commentmodule.messages;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,8 @@ import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
-public class AddCommentMessage implements Serializable {
+public class DeleteCommentMessage implements Serializable {
     private Long articleId;
     private Long accountId;
-    private String comment;
+    private Long commentId;
 }

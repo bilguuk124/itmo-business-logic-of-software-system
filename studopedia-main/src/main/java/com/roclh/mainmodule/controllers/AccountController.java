@@ -5,7 +5,7 @@ import com.roclh.mainmodule.messaging.AuthenticationResponse;
 import com.roclh.mainmodule.messaging.LoginRequest;
 import com.roclh.mainmodule.messaging.RegisterRequest;
 import com.roclh.mainmodule.entities.Account;
-import com.roclh.mainmodule.service.AccountService;
+import com.roclh.mainmodule.services.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

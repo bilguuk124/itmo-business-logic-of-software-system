@@ -1,4 +1,4 @@
-package com.roclh.mainmodule.TestData;
+package com.roclh.mainmodule.testdata;
 
 import com.roclh.mainmodule.database.CategoryDatabase;
 import com.roclh.mainmodule.database.StudopediaDatabase;

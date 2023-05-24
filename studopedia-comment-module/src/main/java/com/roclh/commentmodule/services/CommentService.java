@@ -1,8 +1,8 @@
-package com.roclh.commentmodule.Service;
+package com.roclh.commentmodule.services;
 
-import com.roclh.commentmodule.Database.ArticleRepository;
-import com.roclh.commentmodule.Database.CommentRepository;
-import com.roclh.commentmodule.Exception.CommentNotFoundException;
+import com.roclh.commentmodule.repositories.ArticleRepository;
+import com.roclh.commentmodule.repositories.CommentRepository;
+import com.roclh.commentmodule.exceptions.CommentNotFoundException;
 import com.roclh.mainmodule.entities.Comment;
 import com.roclh.mainmodule.entities.CommentKey;
 import com.roclh.mainmodule.entities.StudopediaArticle;

@@ -1,4 +1,4 @@
-package com.roclh.commentmodule.Database;
+package com.roclh.commentmodule.repositories;
 
 
 import com.roclh.mainmodule.entities.Comment;

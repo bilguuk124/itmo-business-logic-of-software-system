@@ -1,7 +1,7 @@
-package com.roclh.commentmodule.Controller;
+package com.roclh.commentmodule.controllers;
 
-import com.roclh.commentmodule.Exception.CommentNotFoundException;
-import com.roclh.commentmodule.Service.CommentService;
+import com.roclh.commentmodule.exceptions.CommentNotFoundException;
+import com.roclh.commentmodule.services.CommentService;
 import com.roclh.mainmodule.exceptions.ArticleNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

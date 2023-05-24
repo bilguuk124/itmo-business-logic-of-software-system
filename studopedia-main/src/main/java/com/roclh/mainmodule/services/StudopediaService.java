@@ -1,4 +1,4 @@
-package com.roclh.mainmodule.service;
+package com.roclh.mainmodule.services;
 
 import com.roclh.mainmodule.exceptions.ArticleExistsException;
 import com.roclh.mainmodule.exceptions.ArticleNotFoundException;
