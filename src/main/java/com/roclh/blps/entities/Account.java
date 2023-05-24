@@ -3,8 +3,10 @@ package com.roclh.blps.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +20,8 @@ import java.util.List;
 @Data
 @Builder
 @JacksonXmlRootElement(localName = "account")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Account implements UserDetails, Serializable {
     @JacksonXmlProperty(localName = "id")
     private Long id;
@@ -32,32 +36,8 @@ public class Account implements UserDetails, Serializable {
     @JacksonXmlProperty
     private String password;
 
-//    private List<Comment> comments;
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    public Account() {
-    }
-
-//    public Account(Long id, String lastName, String firstName, String username, String password, List<Comment> comments, Role role) {
-//        this.id = id;
-//        this.lastName = lastName;
-//        this.firstName = firstName;
-//        this.username = username;
-//        this.password = password;
-//        this.comments = comments;
-//        this.role = role;
-//    }
-
-
-    public Account(Long id, String firstName, String lastName, String username, String password, Role role) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.password = password;
-        this.role = role;
-    }
 
     @JsonIgnore
     @Override

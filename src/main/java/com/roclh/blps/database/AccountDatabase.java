@@ -6,6 +6,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.roclh.blps.entities.Account;
+import com.roclh.blps.entities.Role;
 import com.roclh.blps.utils.AccountIdGenerator;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 @Getter
@@ -83,5 +85,11 @@ public class AccountDatabase {
         return accountDatabase.stream()
                 .filter(account -> account.getUsername().equals(username))
                 .findAny();
+    }
+
+    public List<Account> getAdmins(){
+        return accountDatabase.stream()
+                .filter(account -> account.getRole().equals(Role.ADMIN))
+                .toList();
     }
 }

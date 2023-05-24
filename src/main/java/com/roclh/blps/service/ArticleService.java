@@ -1,8 +1,9 @@
 package com.roclh.blps.service;
 
 import com.roclh.blps.Exceptions.ArticleNotFoundException;
+import com.roclh.blps.RequestAndResponse.JMSMessage.AddCommentMessage;
+import com.roclh.blps.RequestAndResponse.JMSMessage.DeleteCommentMessage;
 import com.roclh.blps.database.AccountDatabase;
-import com.roclh.blps.database.CommentDatabase;
 import com.roclh.blps.database.StudopediaDatabase;
 import com.roclh.blps.entities.Account;
 import com.roclh.blps.entities.Comment;
@@ -10,9 +11,14 @@ import com.roclh.blps.entities.StudopediaArticle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.jms.*;
 import javax.transaction.Transactional;
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -20,76 +26,84 @@ import java.util.Optional;
 public class ArticleService {
     private final Logger log = LogManager.getLogger(ArticleService.class);
     private final StudopediaDatabase studopediaDatabase;
-    private final CommentDatabase commentDatabase;
     private final AccountDatabase accountDatabase;
+    private final JmsTemplate jmsTemplate;
+
 
     @Autowired
-    public ArticleService(StudopediaDatabase studopediaDatabase, CommentDatabase commentDatabase, AccountDatabase accountDatabase) {
+    public ArticleService(StudopediaDatabase studopediaDatabase, AccountDatabase accountDatabase, JmsTemplate jmsTemplate) {
         this.studopediaDatabase = studopediaDatabase;
-        this.commentDatabase = commentDatabase;
         this.accountDatabase = accountDatabase;
+        this.jmsTemplate = jmsTemplate;
     }
 
 
     @Transactional
-    public void upAnArticle(Long articleId) throws ArticleNotFoundException {
+    public void upAnArticle(Long articleId, Long accountId) throws ArticleNotFoundException {
+        log.info("Account Service: got a job to up an article");
         Optional<StudopediaArticle> optional = studopediaDatabase.findByIdEquals(articleId);
         if (optional.isEmpty()) throw new ArticleNotFoundException();
+        Optional<Account> accountOptional = accountDatabase.findByIdEquals(accountId);
+        if (accountOptional.isEmpty()) throw new UsernameNotFoundException("No user found");
         StudopediaArticle article = optional.get();
-        article.addUp();
+        Account account = accountOptional.get();
+
+        if (article.getUppedUsers().contains(account)){
+            article.getUppedUsers().remove(account);
+            article.removeUp();
+        }
+        else{
+            article.getUppedUsers().add(account);
+            article.addUp();
+        }
         studopediaDatabase.save(article);
     }
 
     @Transactional
-    public void downAnArticle(Long articleId) throws ArticleNotFoundException {
+    public void downAnArticle(Long articleId, Long accountId) throws ArticleNotFoundException {
+        log.info("Account Service: got a job to down an article");
         Optional<StudopediaArticle> optional = studopediaDatabase.findByIdEquals(articleId);
         if (optional.isEmpty()) throw new ArticleNotFoundException();
+        Optional<Account> accountOptional = accountDatabase.findByIdEquals(accountId);
+        if (accountOptional.isEmpty()) throw new UsernameNotFoundException("No user found");
         StudopediaArticle article = optional.get();
-        article.addDown();
+        Account account = accountOptional.get();
+
+        if (article.getDownedUsers().contains(account)){
+            article.getDownedUsers().remove(account);
+            article.removeDown();
+        }
+        else{
+            article.getDownedUsers().add(account);
+            article.addDown();
+        }
         studopediaDatabase.save(article);
-    }
-
-    @Transactional
-    public void cancelUpAnArticle(Long articleId) throws ArticleNotFoundException {
-        Optional<StudopediaArticle> optional = studopediaDatabase.findByIdEquals(articleId);
-        if (optional.isEmpty()) throw new ArticleNotFoundException();
-        StudopediaArticle article = optional.get();
-        article.removeUp();
-        studopediaDatabase.save(article);
-    }
-
-    @Transactional
-    public void cancelDownAnArticle(Long articleId) throws ArticleNotFoundException {
-        Optional<StudopediaArticle> optional = studopediaDatabase.findByIdEquals(articleId);
-        if (optional.isEmpty()) throw new ArticleNotFoundException();
-        StudopediaArticle article = optional.get();
-        article.removeDown();
-        studopediaDatabase.save(article);
-    }
-
-    @Transactional
-    public void commentArticle(Long articleId, Long accountId, String commentString) throws ArticleNotFoundException {
-        Optional<StudopediaArticle> article = studopediaDatabase.findByIdEquals(articleId);
-        Optional<Account> account = accountDatabase.findByIdEquals(accountId);
-        if (article.isEmpty() || account.isEmpty()) throw new ArticleNotFoundException();
-        Comment comment = new Comment(article.get(), account.get(), commentString);
-        commentDatabase.save(comment);
-    }
-
-    @Transactional
-    public void deleteComment(Long articleId, Long accountId, String commentString) throws ArticleNotFoundException {
-        Optional<StudopediaArticle> article = studopediaDatabase.findByIdEquals(articleId);
-        if (article.isEmpty()) throw new ArticleNotFoundException();
-        Optional<Comment> comment = commentDatabase.findCommentByStudopediaArticleAndAccountIdAndComment(article.get(), accountId, commentString);
-        if (comment.isEmpty()) throw new ArticleNotFoundException();
-        commentDatabase.delete(comment.get());
     }
 
     @Transactional
     public void deleteArticle(Long articleId, Long accountId) throws ArticleNotFoundException {
+        log.info("Account Service: got a job to delete an article");
         Optional<StudopediaArticle> article = studopediaDatabase.findByIdEquals(articleId);
         if (article.isEmpty()) throw new ArticleNotFoundException();
         if (!Objects.equals(article.get().getAccountId(), accountId)) throw new ArticleNotFoundException();
         studopediaDatabase.delete(article.get());
     }
+
+    public void commentArticle(Long articleId, Long accountId, String commentString) throws UsernameNotFoundException {
+        log.info("Account Service: sending Comment to CommentService to ADD");
+        Optional<Account> account = accountDatabase.findByIdEquals(accountId);
+        if (account.isEmpty()) throw new UsernameNotFoundException("User not found");
+        AddCommentMessage addCommentMessage = new AddCommentMessage(articleId, accountId, commentString);
+        jmsTemplate.convertAndSend("addQueue", addCommentMessage.toString());
+    }
+
+    public void deleteComment(Long articleId, Long accountId, Long commentId) throws UsernameNotFoundException {
+        log.info("Account Service: sending Comment to CommentService to DELETE");
+        Optional<Account> account = accountDatabase.findByIdEquals(accountId);
+        if (account.isEmpty()) throw new UsernameNotFoundException("User not found");
+        DeleteCommentMessage deleteCommentMessage = new DeleteCommentMessage(articleId, accountId, commentId);
+        jmsTemplate.convertAndSend("deleteQueue", deleteCommentMessage.toString());
+    }
+
+
 }

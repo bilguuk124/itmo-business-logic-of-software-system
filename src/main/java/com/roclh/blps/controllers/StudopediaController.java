@@ -1,26 +1,25 @@
 package com.roclh.blps.controllers;
 
+import com.roclh.blps.Exceptions.ArticleExistsException;
 import com.roclh.blps.Exceptions.ArticleNotFoundException;
 import com.roclh.blps.Exceptions.DataValidationException;
+import com.roclh.blps.entities.Account;
 import com.roclh.blps.entities.StudopediaArticle;
 import com.roclh.blps.service.StudopediaService;
 import com.roclh.blps.utils.ValidationUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 @RestController
 @RequestMapping("/api")
-public class StudopediaController {
+public class StudopediaController  {
 
     private static final Logger log = LogManager.getLogger(StudopediaController.class);
     private static final String SPECIAL_CHARACTERS_MESSAGE = "There is special characters in request";
@@ -44,10 +43,9 @@ public class StudopediaController {
     }
 
     @GetMapping("/articles")
-    public List<StudopediaArticle> getAllArticle(@RequestParam(name = "page") int page) throws DataValidationException {
+    public List<StudopediaArticle> getAllArticle()  {
         log.info("Received request to get all the articles");
-        ValidationUtils.validate(page, (val) -> val < 0, WRONG_PAGE_NUMBER);
-        return service.getArticlesAsList(page);
+        return service.getArticlesAsList();
     }
 
     @GetMapping("/articles-page")
@@ -125,10 +123,24 @@ public class StudopediaController {
         ValidationUtils.validate(categoryName, ValidationUtils::containsSpecialCharacters, SPECIAL_CHARACTERS_MESSAGE);
         ValidationUtils.validate(categoryName, String::isEmpty, EMPTY);
         ValidationUtils.validate(content, String::isEmpty, EMPTY);
-        service.addArticle(title, content, categoryName);
+        Account principal = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        service.addArticle(title, content, categoryName, principal.getId());
         log.info("Successfully added an article with title {}, content {} and category name {}", title, content, categoryName);
-
     }
+
+    @GetMapping("/article/new-request")
+    public List<StudopediaArticle> getNewPostRequests(){
+        log.info("Admin requested articles to approve");
+        return service.getAllNotApprovedArticles();
+    }
+
+    @PutMapping("/article/new-request/{article_id}")
+    public void approveNewPostRequest(
+            @PathVariable(name = "article_id") Long articleId
+    ) throws ArticleExistsException, ArticleNotFoundException {
+        service.approveAnArticle(articleId);
+    }
+
 }
 
 

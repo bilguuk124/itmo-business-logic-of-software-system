@@ -6,24 +6,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Table(name = "article")
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class StudopediaArticle {
+public class StudopediaArticle implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "studopedia_article_gen")
     @SequenceGenerator(name = "studopedia_article_gen", sequenceName = "studopedia_article_seq")
@@ -42,6 +37,16 @@ public class StudopediaArticle {
 
     private Long accountId;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "articleId", cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
+
+    @ElementCollection
+    private Set<Account> uppedUsers;
+    @ElementCollection
+    private Set<Account> downedUsers;
+
+    private Boolean approved;
+
 //    @OneToMany(mappedBy = "article")
 //    @JsonManagedReference(value = "article_reference")
 //    private List<Comment> comments;
@@ -53,7 +58,10 @@ public class StudopediaArticle {
         this.category = category;
         this.upVotes = 0;
         this.downVotes = 0;
-        //this.comments = new ArrayList<>();
+        uppedUsers = new HashSet<>();
+        downedUsers = new HashSet<>();
+        this.comments = new ArrayList<>();
+        approved = false;
     }
 
     public void addUp() {
@@ -72,7 +80,8 @@ public class StudopediaArticle {
         this.downVotes--;
     }
 
-//    public void addComment(Comment comment) {
-//        comments.add(comment);
-//    }
+    public void approve() {
+        this.approved = true;
+    }
+
 }

@@ -5,17 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "comment")
@@ -23,7 +14,7 @@ import javax.persistence.Table;
 @Setter
 @NoArgsConstructor
 @IdClass(CommentKey.class)
-public class Comment {
+public class Comment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comment_id_gen")
@@ -31,20 +22,26 @@ public class Comment {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Id
+    @Column(name = "article_id", nullable = false, insertable = false, updatable = false)
+    private Long articleId;
+
+
+    @Transient
     @JsonBackReference(value = "article_reference")
     @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name="article_id", nullable = false)
-    @Id
-    private StudopediaArticle studopediaArticle;
+    @JoinColumn(name="article_id", nullable = false, insertable = false, updatable = false)
+    private StudopediaArticle article;
 
     @Id
     private Long accountId;
 
     String comment;
 
-    public Comment(StudopediaArticle article, Account account, String comment) {
-        this.studopediaArticle = article;
-        this.accountId = account.getId();
+    public Comment(StudopediaArticle article, Long accountId, String comment) {
+        this.articleId = article.getId();
+        this.article = article;
+        this.accountId = accountId;
         this.comment = comment;
     }
 }

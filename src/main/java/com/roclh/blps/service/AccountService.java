@@ -73,4 +73,8 @@ public class AccountService {
         var jwtToken = jwtService.generateToken(account);
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
+
+    public List<Account> getAdmins(){
+        return database.getAdmins();
+    }
 }

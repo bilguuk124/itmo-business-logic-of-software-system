@@ -17,7 +17,8 @@ import java.io.Serializable;
 public class CommentKey implements Serializable {
 
     Long id;
-    StudopediaArticle studopediaArticle;
+
+    Long articleId;
 
     Long accountId;
 

@@ -1,5 +1,6 @@
 package com.roclh.blps.service;
 
+import com.roclh.blps.Exceptions.ArticleExistsException;
 import com.roclh.blps.Exceptions.ArticleNotFoundException;
 import com.roclh.blps.Exceptions.DataValidationException;
 import com.roclh.blps.database.CategoryDatabase;
@@ -11,7 +12,6 @@ import com.roclh.blps.utils.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -36,24 +36,23 @@ public class StudopediaService {
     }
 
 
-    public List<StudopediaArticle> getArticlesAsList(int page) {
-        Pageable pageWithFiveElements = PageRequest.of(page, DEFAULT_SIZE);
-        return articleRepository.findAll(pageWithFiveElements).getContent();
+    public List<StudopediaArticle> getArticlesAsList() {
+        return articleRepository.getByApprovedTrue();
     }
 
     public List<StudopediaArticle> getArticlesAsListWithPageSize(int page, int page_size) {
         Pageable pages = PageRequest.of(page, page_size);
-        return articleRepository.findAll(pages).getContent();
+        return articleRepository.findByApprovedTrue(pages);
     }
 
     public List<StudopediaArticle> getArticlesAsPage(String search, int page) {
         Pageable pageWithFiveElements = PageRequest.of(page, DEFAULT_SIZE);
-        return articleRepository.findByNameContainsIgnoreCase(search, pageWithFiveElements);
+        return articleRepository.findByNameLikeIgnoreCaseAndApprovedTrue(search, pageWithFiveElements);
     }
 
     public List<StudopediaArticle> getArticlesAsPageWithSize(String search, int page, int pageSize) {
         Pageable pages = PageRequest.of(page, pageSize);
-        return articleRepository.findByNameContainsIgnoreCase(search, pages);
+        return articleRepository.findByNameLikeIgnoreCaseAndApprovedTrue(search, pages);
     }
 
     public StudopediaArticle getArticleByID(Long id) throws ArticleNotFoundException {
@@ -63,7 +62,7 @@ public class StudopediaService {
     }
 
     public StudopediaArticle getArticleByName(String name) throws ArticleNotFoundException {
-        Optional<StudopediaArticle> optional = articleRepository.findByNameEqualsIgnoreCase(name);
+        Optional<StudopediaArticle> optional = articleRepository.findByNameLikeAndApprovedTrue(name);
         if (optional.isEmpty()) throw new ArticleNotFoundException();
         return optional.get();
     }
@@ -71,21 +70,29 @@ public class StudopediaService {
     public List<StudopediaArticle> getArticleSuggestionBySubStr(String subString) {
         int FIRST_ARTICLE = 0;
         Pageable pageOneWithFiveElements = PageRequest.of(FIRST_ARTICLE, DEFAULT_SIZE);
-        return articleRepository.findByNameContainsIgnoreCase(subString, pageOneWithFiveElements);
+        return articleRepository.findByNameLikeIgnoreCaseAndApprovedTrue(subString, pageOneWithFiveElements);
     }
 
     public List<StudopediaArticle> getArticleByCategory(String category, int page) throws ArticleNotFoundException {
         Pageable pageWithFiveElements = PageRequest.of(page, DEFAULT_SIZE);
         Optional<Category> categoryOptional = categoryRepository.findByNameLikeIgnoreCase(category);
         if (categoryOptional.isEmpty()) throw new ArticleNotFoundException();
-        return articleRepository.findByCategoryEquals(categoryOptional.get(), pageWithFiveElements);
+        return articleRepository.findByCategoryEqualsAndApprovedTrue(categoryOptional.get(), pageWithFiveElements);
     }
 
     public List<StudopediaArticle> getArticleByCategoryWithSize(String category, int page, int pageSize) throws ArticleNotFoundException {
         Pageable pages = PageRequest.of(page, pageSize);
         Optional<Category> categoryOptional = categoryRepository.findByNameLikeIgnoreCase(category);
         if (categoryOptional.isEmpty()) throw new ArticleNotFoundException();
-        return articleRepository.findByCategoryEquals(categoryOptional.get(), pages);
+        return articleRepository.findByCategoryEqualsAndApprovedTrue(categoryOptional.get(), pages);
+    }
+
+    public List<StudopediaArticle> getAllApprovedArticles(){
+        return articleRepository.findByApprovedTrue(Pageable.unpaged());
+    }
+
+    public List<StudopediaArticle> getAllNotApprovedArticles(){
+        return articleRepository.findByApprovedFalse();
     }
 
     public List<StudopediaArticle> getAllArticles() {
@@ -107,16 +114,15 @@ public class StudopediaService {
     }
 
     @Transactional
-    public void addArticle(String title, String content, String category) throws DataValidationException {
-        ValidationUtils.validate(title, (val) -> articleRepository.findByNameEqualsIgnoreCase(val).isPresent(), ARTICLE_EXISTS);
+    public void addArticle(String title, String content, String category, Long userId) throws DataValidationException {
+        ValidationUtils.validate(title, (val) -> articleRepository.findByNameLikeAndApprovedTrue(val).isPresent(), ARTICLE_EXISTS);
         Category categoryObj = getOrCreateCategory(category);
-        principal = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         System.out.println(principal.getUsername());
         articleRepository.save(new StudopediaArticle(
                 title,
                 content,
                 categoryObj,
-                principal.getId()
+                userId
         ));
     }
 
@@ -135,5 +141,13 @@ public class StudopediaService {
     }
 
 
-
+    public void approveAnArticle(Long articleId) throws ArticleExistsException, ArticleNotFoundException {
+        Optional<StudopediaArticle> optional = articleRepository.findByIdEqualsAndApprovedTrue(articleId);
+        if (optional.isPresent()) throw new ArticleExistsException();
+        optional = articleRepository.findByIdEquals(articleId);
+        if (optional.isEmpty()) throw new ArticleNotFoundException();
+        if (optional.get().getApproved()) throw new ArticleExistsException();
+        optional.get().approve();
+        articleRepository.save(optional.get());
+    }
 }
