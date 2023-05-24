@@ -11,8 +11,13 @@
     <groupId>com.Roclh</groupId>
     <artifactId>blps</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
     <name>blps</name>
     <description>blps</description>
+    <modules>
+        <module>studopedia-main</module>
+        <module>studopedia-comment-module</module>
+    </modules>
 
     <properties>
         <java.version>17</java.version>

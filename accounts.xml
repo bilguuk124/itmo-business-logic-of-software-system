@@ -1,1 +1,12 @@
-<AccountDatabase><accounts><accountDatabase><firstName/><lastName>Purevsuren</lastName><username>bilguuk123@gmail.com</username><password>$2a$10$CNKiDfbyXQlbG/GZI/ibvuE/CBFuOlxAIhm7tn4NQEJYkKKmOgKdy</password><role>ADMIN</role><id>1</id></accountDatabase></accounts></AccountDatabase>
+<AccountDatabase>
+    <accounts>
+        <accountDatabase>
+            <firstName/>
+            <lastName>Purevsuren</lastName>
+            <username>bilguuk123@gmail.com</username>
+            <password>$2a$10$CNKiDfbyXQlbG/GZI/ibvuE/CBFuOlxAIhm7tn4NQEJYkKKmOgKdy</password>
+            <role>ADMIN</role>
+            <id>1</id>
+        </accountDatabase>
+    </accounts>
+</AccountDatabase>
