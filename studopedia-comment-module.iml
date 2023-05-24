@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4">
+  <component name="AdditionalModuleElements">
+    <content url="file://$MODULE_DIR$/studopedia-comment-module" dumb="true">
+      <sourceFolder url="file://$MODULE_DIR$/studopedia-comment-module/src/test" isTestSource="true" />
+    </content>
+  </component>
+  <component name="FacetManager">
+    <facet type="jpa" name="JPA">
+      <configuration>
+        <setting name="validation-enabled" value="true" />
+        <datasource-mapping />
+        <naming-strategy-map />
+      </configuration>
+    </facet>
+    <facet type="Spring" name="Spring">
+      <configuration />
+    </facet>
+  </component>
+</module>
