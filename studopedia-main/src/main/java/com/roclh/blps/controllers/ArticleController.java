@@ -1,12 +1,11 @@
 package com.roclh.blps.controllers;
 
-import com.roclh.blps.Exceptions.ArticleNotFoundException;
+import com.roclh.blps.exceptions.ArticleNotFoundException;
 import com.roclh.blps.entities.Account;
 import com.roclh.blps.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,8 +13,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/article/{article_id}")

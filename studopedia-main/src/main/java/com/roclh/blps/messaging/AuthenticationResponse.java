@@ -1,4 +1,4 @@
-package com.roclh.blps.RequestAndResponse;
+package com.roclh.blps.messaging;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

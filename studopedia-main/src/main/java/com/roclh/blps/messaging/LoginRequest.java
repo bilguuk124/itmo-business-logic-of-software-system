@@ -1,4 +1,4 @@
-package com.roclh.blps.RequestAndResponse;
+package com.roclh.blps.messaging;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,13 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
-
+@AllArgsConstructor
+@Builder
+public class LoginRequest {
     private String username;
     private String password;
-    private String fistName;
-    private String lastName;
 }

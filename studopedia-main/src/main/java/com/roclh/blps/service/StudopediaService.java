@@ -1,8 +1,8 @@
 package com.roclh.blps.service;
 
-import com.roclh.blps.Exceptions.ArticleExistsException;
-import com.roclh.blps.Exceptions.ArticleNotFoundException;
-import com.roclh.blps.Exceptions.DataValidationException;
+import com.roclh.blps.exceptions.ArticleExistsException;
+import com.roclh.blps.exceptions.ArticleNotFoundException;
+import com.roclh.blps.exceptions.DataValidationException;
 import com.roclh.blps.database.CategoryDatabase;
 import com.roclh.blps.database.StudopediaDatabase;
 import com.roclh.blps.entities.Account;

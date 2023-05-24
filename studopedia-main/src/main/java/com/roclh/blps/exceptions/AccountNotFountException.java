@@ -1,4 +1,4 @@
-package com.roclh.blps.Exceptions;
+package com.roclh.blps.exceptions;
 
 public class AccountNotFountException extends Exception{
 }

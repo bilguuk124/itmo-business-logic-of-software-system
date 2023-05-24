@@ -1,9 +1,9 @@
 package com.roclh.blps.controllers;
 
-import com.roclh.blps.Exceptions.AccountNotFountException;
-import com.roclh.blps.RequestAndResponse.AuthenticationResponse;
-import com.roclh.blps.RequestAndResponse.LoginRequest;
-import com.roclh.blps.RequestAndResponse.RegisterRequest;
+import com.roclh.blps.exceptions.AccountNotFountException;
+import com.roclh.blps.messaging.AuthenticationResponse;
+import com.roclh.blps.messaging.LoginRequest;
+import com.roclh.blps.messaging.RegisterRequest;
 import com.roclh.blps.entities.Account;
 import com.roclh.blps.service.AccountService;
 import lombok.RequiredArgsConstructor;

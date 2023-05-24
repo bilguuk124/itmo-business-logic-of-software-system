@@ -1,4 +1,4 @@
-package com.roclh.blps.Exceptions;
+package com.roclh.blps.exceptions;
 
 
 import org.springframework.http.HttpStatus;

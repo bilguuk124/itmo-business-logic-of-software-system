@@ -1,24 +1,20 @@
 package com.roclh.blps.service;
 
-import com.roclh.blps.Exceptions.ArticleNotFoundException;
-import com.roclh.blps.RequestAndResponse.JMSMessage.AddCommentMessage;
-import com.roclh.blps.RequestAndResponse.JMSMessage.DeleteCommentMessage;
+import com.roclh.blps.exceptions.ArticleNotFoundException;
+import com.roclh.blps.messaging.JMSMessage.AddCommentMessage;
+import com.roclh.blps.messaging.JMSMessage.DeleteCommentMessage;
 import com.roclh.blps.database.AccountDatabase;
 import com.roclh.blps.database.StudopediaDatabase;
 import com.roclh.blps.entities.Account;
-import com.roclh.blps.entities.Comment;
 import com.roclh.blps.entities.StudopediaArticle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessageCreator;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.jms.*;
 import javax.transaction.Transactional;
-import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 

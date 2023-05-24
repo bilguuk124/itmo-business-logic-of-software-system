@@ -1,6 +1,6 @@
 package com.roclh.blps.utils;
 
-import com.roclh.blps.Exceptions.DataValidationException;
+import com.roclh.blps.exceptions.DataValidationException;
 
 import java.util.List;
 import java.util.function.Predicate;
