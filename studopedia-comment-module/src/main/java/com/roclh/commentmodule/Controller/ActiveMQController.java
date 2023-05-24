@@ -1,7 +1,6 @@
 package com.roclh.commentmodule.Controller;
 
 import com.roclh.commentmodule.Exception.CommentNotFoundException;
-import com.roclh.commentmodule.Exception.NotOwnerException;
 import com.roclh.commentmodule.Service.CommentService;
 import com.roclh.mainmodule.exceptions.ArticleNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
-import javax.jms.JMSException;
 import java.util.Arrays;
 
 @Component
@@ -24,7 +22,7 @@ public class ActiveMQController {
     }
 
     @JmsListener(destination = "addQueue")
-    public void addComment(String message) throws NotOwnerException, ArticleNotFoundException, JMSException {
+    public void addComment(String message) throws ArticleNotFoundException {
         log.info("Received " + message);
         String[] result = message.split(";");
         log.info("Array: " + Arrays.toString(result));
@@ -36,7 +34,7 @@ public class ActiveMQController {
     }
 
     @JmsListener(destination = "deleteQueue")
-    public void deleteComment(String  message) throws NotOwnerException, ArticleNotFoundException, CommentNotFoundException, JMSException {
+    public void deleteComment(String  message) throws ArticleNotFoundException, CommentNotFoundException {
         log.info("Received " + message);
         String[] result = message.split(";");
         log.info("Array: " + Arrays.toString(result));

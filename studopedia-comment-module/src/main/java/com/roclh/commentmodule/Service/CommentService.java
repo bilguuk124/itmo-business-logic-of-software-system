@@ -3,7 +3,6 @@ package com.roclh.commentmodule.Service;
 import com.roclh.commentmodule.Database.ArticleRepository;
 import com.roclh.commentmodule.Database.CommentRepository;
 import com.roclh.commentmodule.Exception.CommentNotFoundException;
-import com.roclh.commentmodule.Exception.NotOwnerException;
 import com.roclh.mainmodule.entities.Comment;
 import com.roclh.mainmodule.entities.CommentKey;
 import com.roclh.mainmodule.entities.StudopediaArticle;
@@ -28,7 +27,7 @@ public class CommentService {
     }
 
     public void addComment(Long articleId, Long accountId, String comment) throws ArticleNotFoundException {
-        log.info("CommentService: adding a new comment to article with id" + articleId);
+        log.info("CommentService: adding a new comment to article with id {}", articleId);
         Optional<StudopediaArticle> article = articleRepository.findById(articleId);
         if (article.isEmpty()) throw new ArticleNotFoundException();
         StudopediaArticle article1 = article.get();
@@ -36,13 +35,14 @@ public class CommentService {
         commentRepository.save(comment1);
     }
 
-    public void deleteComment(Long articleId, Long accountId, Long commentId) throws ArticleNotFoundException, CommentNotFoundException, NotOwnerException {
-        log.info("CommentService: deleting comment to article with id" + articleId);
+    public void deleteComment(Long articleId, Long accountId, Long commentId) throws ArticleNotFoundException, CommentNotFoundException {
+        log.info("CommentService: deleting comment to article with id {}", articleId);
         Optional<StudopediaArticle> article = articleRepository.findById(articleId);
         if (article.isEmpty()) throw new ArticleNotFoundException();
         CommentKey key = new CommentKey(commentId, article.get().getId(), accountId);
         Optional<Comment> comment = commentRepository.findById(key);
         if (comment.isEmpty()) throw new CommentNotFoundException();
-        commentRepository.deleteByIdAndArticleIdAndAccountId(commentId, articleId, accountId);
+        long deletedNumber = commentRepository.deleteByIdAndAccountIdAndArticleId(commentId, articleId, accountId);
+        log.info("CommentService: deleted {} comments", deletedNumber);
     }
 }
