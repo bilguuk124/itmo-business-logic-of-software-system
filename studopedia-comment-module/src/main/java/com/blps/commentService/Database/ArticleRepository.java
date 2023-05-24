@@ -1,6 +1,6 @@
 package com.blps.commentService.Database;
 
-import com.blps.commentService.Entity.StudopediaArticle;
+import com.roclh.blps.entities.StudopediaArticle;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

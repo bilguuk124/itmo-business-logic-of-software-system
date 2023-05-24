@@ -2,12 +2,12 @@ package com.blps.commentService.Service;
 
 import com.blps.commentService.Database.ArticleRepository;
 import com.blps.commentService.Database.CommentRepository;
-import com.blps.commentService.Entity.Comment;
-import com.blps.commentService.Entity.CommentKey;
-import com.blps.commentService.Entity.StudopediaArticle;
-import com.blps.commentService.Exception.ArticleNotFoundException;
 import com.blps.commentService.Exception.CommentNotFoundException;
 import com.blps.commentService.Exception.NotOwnerException;
+import com.roclh.blps.entities.Comment;
+import com.roclh.blps.entities.CommentKey;
+import com.roclh.blps.entities.StudopediaArticle;
+import com.roclh.blps.exceptions.ArticleNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

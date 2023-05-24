@@ -1,9 +1,9 @@
 package com.blps.commentService.Controller;
 
-import com.blps.commentService.Exception.ArticleNotFoundException;
 import com.blps.commentService.Exception.CommentNotFoundException;
 import com.blps.commentService.Exception.NotOwnerException;
 import com.blps.commentService.Service.CommentService;
+import com.roclh.blps.exceptions.ArticleNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
