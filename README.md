@@ -8,6 +8,7 @@ Used technologies:
 - Spring boot
 - BPMN notation
 - @Transactional
+- Transaction manager Bitronix
 - Java Messaging Service
 - Asynchronous computing using ActiveMQ
 - Scheduled tasks using Quarz
